@@ -1,0 +1,68 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "ct-carbon-relay.name" . }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: {{ include "ct-carbon-relay.name" . }}
+    chart: {{ include "ct-carbon-relay.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+    {{- range $key, $value := .Values.labels}}
+    {{ $key }}: {{ $value }}
+    {{- end}} 
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ include "ct-carbon-relay.name" . }}
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ include "ct-carbon-relay.name" . }}
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+      - name: {{ .Chart.Name }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        ports:
+        - name: http
+          containerPort: {{ .Values.ports.http }}
+          protocol: TCP
+        - name: graphite
+          containerPort: {{ .Values.ports.graphite }}
+          protocol: TCP
+        livenessProbe:
+          httpGet:
+            path: /
+            port: http
+          initialDelaySeconds: 3
+          periodSeconds: 3
+        readinessProbe:
+          httpGet:
+            path: /
+            port: http
+          periodSeconds: 3
+        env:
+          - name: GRAPHANACLOUD_API_KEY
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.secretKeyRef.name }}
+                key: {{ .Values.secretKeyRef.apiKey }}
+          - name: GRAPHANACLOUD_ENDPOINT
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.secretKeyRef.name }}
+                key: {{ .Values.secretKeyRef.endpoint }}
+        volumeMounts:
+        - name: {{ .Values.image.volumeMount }}
+          mountPath: /config
+      imagePullSecrets:
+        - name: jfrog-artifactory
+      volumes:
+        - name: {{ .Values.image.volumeMount }}
+          configMap:
+            name: {{ include "ct-carbon-relay.name" . }}
+

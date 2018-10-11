@@ -1,0 +1,26 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: {{ template "ct-infra.fullname" . }}-dashboard
+  labels:
+    app: {{ template "ct-infra.fullname" . }}-dashboard
+    chart: {{ template "ct-infra.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+{{- if .Values.dashboard.ingress.annotations }}
+  annotations:
+{{ toYaml .Values.dashboard.ingress.annotations | indent 4 }}
+{{- end }}
+spec:
+  rules:
+    - host: {{ .Values.dashboard.ingress.host }}
+      http:
+        paths:
+          - path: /
+            backend:
+              serviceName: {{ .Release.Name }}-kubernetes-dashboard
+              servicePort: 443
+  tls:
+  - secretName: {{ include "ct-infra.fullname" . }}-dashboard
+    hosts:
+    - {{ .Values.dashboard.ingress.host }}

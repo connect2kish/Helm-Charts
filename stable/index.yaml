@@ -1,0 +1,42 @@
+apiVersion: v1
+entries:
+  ct-base:
+  - apiVersion: v1
+    appVersion: "1.0"
+    created: 2018-08-21T19:53:02.490858248-07:00
+    description: A Helm chart for installing base services for kubernetes
+    digest: faed1e1053679dafc9d799d23c9e66adfa7593aeef042985975b7c00ecf15b7e
+    name: ct-base
+    urls:
+    - ct-base-0.1.1.tgz
+    version: 0.1.1
+  - apiVersion: v1
+    appVersion: "1.0"
+    created: 2018-08-21T19:53:02.489737045-07:00
+    description: A Helm chart for installing base services for kubernetes
+    digest: bc9b5d68d499c32d3a6e60993ef8d9133a72554f0f5f37bbfb4d72a562c30521
+    name: ct-base
+    urls:
+    - ct-base-0.1.0.tgz
+    version: 0.1.0
+  ct-carbon-relay:
+  - apiVersion: v1
+    appVersion: "1.0"
+    created: 2018-08-21T19:53:02.491213716-07:00
+    description: carbon-relay-ng to relay metrics to grafana cloud
+    digest: 5a5836e17b82a3c2a8398b9a7dd7bddf6d7344890b7a727aea2dbe03ace4e07f
+    name: ct-carbon-relay
+    urls:
+    - ct-carbon-relay-0.1.0.tgz
+    version: 0.1.0
+  ct-infra:
+  - apiVersion: v1
+    appVersion: "1.0"
+    created: 2018-08-21T19:53:02.492436988-07:00
+    description: A Helm chart for Kubernetes
+    digest: b0613d128f70291964949fd7371e4ec7d10616f2236539886395fa1497722517
+    name: ct-infra
+    urls:
+    - ct-infra-0.1.0.tgz
+    version: 0.1.0
+generated: 2018-08-21T19:53:02.487817058-07:00

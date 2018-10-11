@@ -1,0 +1,10 @@
+dependencies:
+- name: cert-manager
+  version: v0.4.0
+  repository: https://kubernetes-charts.storage.googleapis.com
+- name: coredns
+  version: 0.9.0
+  repository: https://kubernetes-charts.storage.googleapis.com
+- name: external-dns
+  version: 0.6.1
+  repository: https://kubernetes-charts.storage.googleapis.com

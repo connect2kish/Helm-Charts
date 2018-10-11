@@ -1,0 +1,22 @@
+# Default values for ct-infra.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+nameOverride: ""
+fullnameOverride: ""
+
+route53:
+  region: us-west-2
+  hostedZoneId:
+
+acme:
+  server: https://acme-staging-v02.api.letsencrypt.org/directory
+  email:
+
+kubernetes-dashboard:
+  ingress:
+    enabled: false
+  rbac:
+    create: true
+  serviceAccount:
+    create: true

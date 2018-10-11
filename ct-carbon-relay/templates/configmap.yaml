@@ -1,0 +1,75 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "ct-carbon-relay.name" . }}
+  namespace: {{ .Values.namespace }}
+data:
+  carbon-relay-ng.ini: |
+
+    ## Global settings ##
+    # instance id's distinguish stats of multiple relays.
+    # do not run multiple relays with the same instance id.
+    # supported variables:
+    #  ${HOST} : hostname
+    instance = "${HOST}"
+    max_procs = 2
+    
+    spool_dir = "/var/spool/carbon-relay-ng"
+    pid_file = "/var/run/carbon-relay-ng.pid"
+    
+    ## Logging ##
+    # one of critical error warning notice info debug
+    # see docs/logging.md for level descriptions
+    #log_level = "notice"
+    log_level = "notice"
+    
+    # you can also validate that each series has increasing timestamps
+    validate_order = false
+    
+    # How long to keep track of invalid metrics seen
+    # Useful time units are "s", "m", "h"
+    bad_metrics_max_age = "24h"
+
+    # Blacklist
+
+    blacklist = [
+      'regex .*\.cpu-pcnt-usage\.guest$',
+      'prefix STRESS.host'
+    ]
+    
+    ## Inputs ##
+    
+    ### plaintext Carbon ###
+    listen_addr = "0.0.0.0:2003"
+    
+    admin_addr = "0.0.0.0:2004"
+    http_addr = "0.0.0.0:8081"
+    
+    ### Pickle Carbon ###
+    pickle_addr = "0.0.0.0:2013"
+
+    ### Example rewriter config
+    [[rewriter]]
+    old = '/^ddeore-local-vm\.([^.]+)/'
+    new = 'ddeore-local-vm.POD1.${1}'
+    not = ''
+    max = -1
+    
+    [[route]]
+    key = 'grafanaNet'
+    type = 'grafanaNet'
+    addr = '{{.GRAPHANACLOUD_ENDPOINT}}'
+    apikey = '{{.GRAPHANACLOUD_API_KEY}}'
+    schemasFile = '/conf/storage-schemas.conf'
+    
+    [instrumentation]
+    graphite_addr = "localhost:2003"
+    graphite_interval = 10000  # in ms
+
+  storage-schemas.conf: |
+
+   [default]
+     pattern = .*
+     retentions = 10s:1d
+
